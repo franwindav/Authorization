@@ -1,0 +1,22 @@
+<link rel="stylesheet" type="text/css" href="/authorization/styles/index.css" />
+<link href="https://fonts.googleapis.com/css?family=Montserrat|Poppins&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+{{#if error}}
+<div id="error">
+   Incorrect login or password
+</div>
+{{/if}}
+<div class="authorization">
+   <form action="/authorization" method="POST" id="form">
+      <h1>Authorization</h1>
+      <div class="data">
+         <input id="login" type="text" name="login" placeholder="Login" />
+         <i class="fa fa-sign-in ico"></i>
+      </div>
+      <div class="data">
+         <input id="password" type="text" name="password" placeholder="Password" />
+         <i class="fa fa-lock ico"></i>
+      </div>
+      <button id="submit" type="submit">come in</button>
+   </form>
+</div>
