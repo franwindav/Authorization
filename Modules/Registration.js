@@ -1,8 +1,9 @@
 class Registration {
-   constructor(users, roles, url) {
+   constructor(users, roles, authorization, url) {
       this.url = url;
       this.users = users;
       this.roles = roles;
+      this.authorization = authorization;
 
       this.GET = (req, res) => {
          res.render(this.url, { headTitle: 'registration', roles: this.roles.roles });
@@ -20,27 +21,36 @@ class Registration {
          if (Object.keys(ans).length == 0) {
             this.users.addUser(data.login, data.password);
             this.roles.addRole(data.login, data.role);
-            res.redirect('/authorization');
+            this.authorization.entrance(this.users, data.login, req.session);
+            res.redirect('/');
+            return;
          } else {
             res.render(this.url, { error: ans, roles: this.roles.roles });
          }
       };
 
       this.main = (req, res, next) => {
-         switch (req.method) {
-            case 'GET': {
-               this.GET(req, res);
-               return;
+         const isAuthorization = this.authorization.isAuthorization(req.session);
+
+         if (!isAuthorization) {
+            switch (req.method) {
+               case 'GET': {
+                  this.GET(req, res);
+                  break;
+               }
+               case 'POST': {
+                  this.POST(req, res);
+                  break;
+               }
+               default: {
+                  next();
+                  break;
+               }
             }
-            case 'POST': {
-               this.POST(req, res);
-               return;
-            }
-            default: {
-               next();
-               return;
-            }
+         } else {
+            res.redirect('/');
          }
+         return;
       };
    }
 

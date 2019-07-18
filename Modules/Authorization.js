@@ -6,12 +6,8 @@ class Authorization {
       this.POST = (req, res) => {
          const login = req.body.login;
          const password = req.body.password;
-         const session = req.session;
          if (this.users.isExistUser(login, password)) {
-            const token = randomString();
-            this.users.addNewToken(token, login);
-            session.token = token;
-            session.login = login;
+            this.entrance(this.users, login, req.session);
             res.redirect('/');
             return;
          }
@@ -24,27 +20,43 @@ class Authorization {
       };
 
       this.main = (req, res, next) => {
+         const isAuthorization = this.isAuthorization(req.session);
+
          if (req.url == `/${this.url}`) {
-            switch (req.method) {
-               case 'GET': {
-                  this.GET(req, res);
-                  return;
+            if (!isAuthorization) {
+               switch (req.method) {
+                  case 'GET': {
+                     this.GET(req, res);
+                     break;
+                  }
+                  case 'POST': {
+                     this.POST(req, res);
+                     break;
+                  }
                }
-               case 'POST': {
-                  this.POST(req, res);
-                  return;
-               }
+            } else {
+               res.redirect('/');
             }
+            return;
          }
-         const login = req.session.login;
-         const token = req.session.token;
-         if (!this.users.isExistUserToken(login, token)) {
+         if (!isAuthorization) {
             res.redirect(`/${this.url}`);
             return false;
          }
          next();
          return true;
       };
+   }
+   isAuthorization(session) {
+      const login = session.login;
+      const token = session.token;
+      return this.users.isExistUserToken(login, token);
+   }
+   entrance(users, login, session) {
+      const token = randomString();
+      users.addNewToken(token, login);
+      session.token = token;
+      session.login = login;
    }
 }
 

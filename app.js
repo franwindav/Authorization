@@ -14,7 +14,7 @@ const registrationURL = 'registration';
 const Users = new (require('./Modules/Users'))();
 const Auth = new (require('./Modules/Authorization'))(Users, authorizationURL);
 const Roles = new (require('./Modules/Roles'))();
-const Reg = new (require('./Modules/Registration'))(Users, Roles, registrationURL);
+const Reg = new (require('./Modules/Registration'))(Users, Roles, Auth, registrationURL);
 
 const hbs = exphbs.create({
    defaultLayout: 'main',
@@ -46,7 +46,7 @@ app.get('/logout', (req, res) => {
 });
 
 app.get('*', (req, res) => {
-   res.render('main', { headTitle: 'home' });
+   res.render('main', { headTitle: 'home', role: Roles.getRole(req.session.login) });
 });
 
 app.engine('.hbs', hbs.engine);
