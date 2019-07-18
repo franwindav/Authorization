@@ -1,0 +1,31 @@
+.signControl {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   margin-top: 20px;
+}
+
+.sign {
+   width: 200px;
+   height: 50px;
+   margin: auto;
+   background: #57b846;
+   border: none;
+   border-radius: 25px;
+   color: #fff;
+   font-family: 'Montserrat', sans-serif;
+   line-height: 1.5;
+   font-size: 15px;
+   text-transform: uppercase;
+   transition: all 0.4s;
+   cursor: pointer;
+}
+.sign.main:hover {
+   background: #00cccc;
+}
+.sign:hover {
+   background: #333333;
+}
+.sign-separator {
+   margin: 10px 0;
+}

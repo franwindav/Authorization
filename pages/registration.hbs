@@ -1,0 +1,64 @@
+<link rel="stylesheet" type="text/css" href="/reg/styles/index.css" />
+<link rel="stylesheet" type="text/css" href="/signControl/index.css" />
+<link href="https://fonts.googleapis.com/css?family=Montserrat|Poppins&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+<script src="/reg/js/index.js"></script>
+{{#if error}}
+<div id="error">
+	Incorrect data
+</div>
+{{/if}}
+<div class="registration">
+	<form action="/registration" method="POST" id="form">
+		<h1>Registration</h1>
+		<div class="data ">
+			<input id="login" class='field' type="text" name="login" placeholder="login" />
+			<i class="fa fa-sign-in ico"></i>
+			{{#if error.inLogin}}
+			<i class="fa fa-exclamation-circle warn" title="{{error.inLogin}}"></i>
+			{{/if}}
+		</div>
+		<div class="data">
+			<input id="password" class='field' type="password" name="password" placeholder="password" />
+			<i class="fa fa-lock ico"></i>
+			{{#if error.inPassword}}
+			<i class="fa fa-exclamation-circle warn" title="{{error.inPassword}}"></i>
+			{{/if}}
+		</div>
+		<div class="data">
+			<input id="confirm-password" class='field' type="password" name="confirmPassword"
+				placeholder="confirm password" />
+			<i class="fa fa-lock ico"></i>
+			{{#if error.inPassword}}
+			<i class="fa fa-exclamation-circle warn" title="{{error.inConfirmPassword}}"></i>
+			{{/if}}
+		</div>
+		<div class="mainRole">
+			<div class="data field">
+				<span class="chosen">
+					not chosen
+				</span>
+				<i class="fa fa-user ico"></i>
+				<div class="roles">
+					{{#each roles}}
+					<div class="role-container">
+						<label>
+							<input type="radio" name="role" class="radio-role" value="{{this}}">
+							<div class="filter"></div>
+							<div class="role">{{this}}</div>
+						</label>
+					</div>
+					{{/each}}
+				</div>
+				{{#if error.inRole}}
+				<i class="fa fa-exclamation-circle warn"></i>
+				{{/if}}
+			</div>
+		</div>
+		<div class="signControl">
+			<button id="sign-up" class="sign main" type="submit">sign up</button>
+			<p class='sign-separator'>or</p>
+			<a href="/authorization"><button id="sign-in" class="sign" type="button">sign in</button></a>
+		</div>
+	</form>
+</div>
