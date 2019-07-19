@@ -7,7 +7,6 @@ class Roles {
       };
       this.addRole = (login, role) => {
          this.users.push({ login, role: this.roles.indexOf(role) });
-         console.log(this.users);
       };
       this.getRole = login => {
          for (let i = 0; i < this.users.length; i++) {

@@ -10,7 +10,6 @@ class Registration {
       };
 
       this.POST = (req, res) => {
-         console.log(req.body);
          const data = {
             login: req.body.login,
             password: req.body.password,
@@ -22,7 +21,7 @@ class Registration {
             this.users.addUser(data.login, data.password);
             this.roles.addRole(data.login, data.role);
             this.authorization.entrance(this.users, data.login, req.session);
-            res.redirect('/');
+            res.render('successRegistration');
             return;
          } else {
             res.render(this.url, { error: ans, roles: this.roles.roles });
