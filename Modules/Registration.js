@@ -1,72 +1,50 @@
-class Registration {
-   constructor(users, roles, authorization, url) {
-      this.url = url;
-      this.users = users;
-      this.roles = roles;
-      this.authorization = authorization;
+const USERS = require('./Users');
+const isAuth = require('./Authorization').isAuthorization;
+const entrance = require('./Authorization').entrance;
+const regApp = require('express').Router();
 
-      this.GET = (req, res) => {
-         res.render(this.url, { headTitle: 'registration', roles: this.roles.roles });
-      };
+const isDataCorrect = data => {
+   let errors = {};
+   if (!USERS.isExistRole(data.role)) errors.inRole = true;
+   if (data.login.length < 5 || data.login.includes(' ')) errors.inLogin = 'Логин должен быть длиной не менее 6 символов и без пробелов';
+   if (data.password.length < 5 || data.password.includes(' ')) errors.inPassword = 'Пароль должен быть длиной не менее 6 символов и без пробелов';
+   if (USERS.findUser(data.login)) errors.inLogin = 'Логин уже существует';
+   if (data.confirmPassword != data.password) {
+      errors.inPassword = 'Пароли не совпадают';
+      errors.inConfirmPassword = 'Пароли не совпадают';
+   }
+   return errors;
+};
 
-      this.POST = (req, res) => {
-         const data = {
-            login: req.body.login,
-            password: req.body.password,
-            confirmPassword: req.body.confirmPassword,
-            role: req.body.role,
-         };
-         const ans = this.isDataCorrect(data);
-         if (Object.keys(ans).length == 0) {
-            this.users.addUser(data.login, data.password);
-            this.roles.addRole(data.login, data.role);
-            this.authorization.entrance(this.users, data.login, req.session);
-            res.render('successRegistration');
-            return;
-         } else {
-            res.render(this.url, { error: ans, roles: this.roles.roles });
-         }
-      };
-
-      this.main = (req, res, next) => {
-         const isAuthorization = this.authorization.isAuthorization(req.session);
-
-         if (!isAuthorization) {
-            switch (req.method) {
-               case 'GET': {
-                  this.GET(req, res);
-                  break;
-               }
-               case 'POST': {
-                  this.POST(req, res);
-                  break;
-               }
-               default: {
-                  next();
-                  break;
-               }
-            }
-         } else {
-            res.redirect('/');
-         }
+module.exports = app => {
+   regApp.use('/registration', (req, res, next) => {
+      const isAuthorization = isAuth(req.session);
+      if (isAuthorization) {
+         res.redirect('/');
          return;
-      };
-   }
-
-   isDataCorrect(data) {
-      let ans = {};
-      if (!this.roles.isExistRole(data.role)) ans.inRole = true;
-      if (data.login.length < 5 || data.login.includes(' '))
-         ans.inLogin = 'Логин должен быть длиной не менее 6 символов и без пробелов';
-      if (data.password.length < 5 || data.password.includes(' '))
-         ans.inPassword = 'Пароль должен быть длиной не менее 6 символов и без пробелов';
-      if (this.users.findUser(data.login)) ans.inLogin = 'Логин уже существует';
-      if (data.confirmPassword != data.password) {
-         ans.inPassword = 'Пароли не совпадают';
-         ans.inConfirmPassword = 'Пароли не совпадают';
       }
-      return ans;
-   }
-}
+      next();
+   });
 
-module.exports = Registration;
+   regApp.get('/registration', (req, res) => {
+      return app.render(req, res, '/registration', { headTitle: 'registration', roles: USERS.roles });
+   });
+
+   regApp.post('/registration', (req, res) => {
+      const data = {
+         login: req.body.login,
+         password: req.body.password,
+         confirmPassword: req.body.confirmPassword,
+         role: req.body.role
+      };
+      const errors = isDataCorrect(data);
+      if (Object.keys(errors).length == 0) {
+         USERS.addUser(data);
+         entrance(data.login, req.session);
+         app.render(req, res, '/');
+      } else app.render(req, res, '/registration');
+      // return res.send(JSON.stringify(errors));
+   });
+
+   return regApp;
+};

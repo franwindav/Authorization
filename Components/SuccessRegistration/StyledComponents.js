@@ -1,8 +1,13 @@
-body {
-   min-height: 100vh;
-   background: linear-gradient(-135deg, #c850c0, #4158d0);
-}
-#success {
+import styled, { createGlobalStyle } from 'styled-components';
+
+const GlobalStyle = createGlobalStyle`
+   body {
+      min-height: 100vh;
+      background: linear-gradient(-135deg, #c850c0, #4158d0);
+   }
+`;
+
+const Success_ = styled.div`
    width: min-content;
    height: min-content;
    margin: auto;
@@ -17,16 +22,17 @@ body {
    color: rgba(51, 204, 51, 0.7);
    transform: scale(1);
    transition: transform 0.3s ease-in-out;
-}
-#success:hover,
-#go-to-main:hover {
-   transform: scale(1.1);
-}
-a {
+   &:hover {
+      transform: scale(1.1);
+   }
+`;
+
+const Link_ = styled.a`
    text-decoration: none;
    color: #1a1a1a;
-}
-#go-to-main {
+`;
+
+const GoToMain_ = styled.button`
    display: block;
    width: min-content;
    height: min-content;
@@ -44,7 +50,13 @@ a {
    text-transform: uppercase;
    text-decoration: none;
    white-space: nowrap;
+   outline: none;
    cursor: pointer;
    transform: scale(1);
    transition: transform 0.3s ease-in-out;
-}
+   &:hover {
+      transform: scale(1.1);
+   }
+`;
+
+export { Success_, Link_, GoToMain_, GlobalStyle };

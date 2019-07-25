@@ -1,9 +1,9 @@
 {
    "env": {
-      "browser": false,
+      "browser": true,
       "es6": true
    },
-   "extends": ["eslint:recommended", "plugin:prettier/recommended", "plugin:node/recommended"],
+   "extends": ["eslint:recommended", "plugin:react/recommended", "plugin:prettier/recommended", "plugin:jsx-a11y/recommended", "airbnb-base/legacy"],
    "globals": {
       "Atomics": "readonly",
       "SharedArrayBuffer": "readonly"
@@ -18,7 +18,7 @@
       "allowImportExportEverywhere": false,
       "codeFrame": true
    },
-   "plugins": ["prettier"],
+   "plugins": ["react", "prettier", "jsx-a11y"],
    "rules": {
       "object-curly-newline": 0,
       "no-mixed-operators": 0,
@@ -29,13 +29,7 @@
       "strict": 0,
       "linebreak-style": ["error", "windows"],
       "import/no-unresolved": 0,
-      "indent": [
-         "warn",
-         3,
-         {
-            "SwitchCase": 1
-         }
-      ],
+      "indent": ["error", 3],
       "arrow-parens": 0,
       "no-nested-ternary": 0,
       "prettier/prettier": 0,
@@ -51,9 +45,35 @@
       "implicit-arrow-linebreak": 0,
       "no-param-reassign": 0,
       "radix": 0,
+      "react/require-default-props": 0,
+      "react/forbid-prop-types": 0,
       "prefer-destructuring": 0,
       "no-underscore-dangle": 0,
+      "react/no-find-dom-node": 0,
+      "react/no-did-mount-set-state": 0,
+      "react/no-unused-prop-types": 0,
+      "react/jsx-one-expression-per-line": 0,
+      "jsx-a11y/anchor-is-valid": [
+         "error",
+         {
+            "components": ["Link"],
+            "specialLink": ["to"]
+         }
+      ],
+      "jsx-a11y/label-has-for": [
+         2,
+         {
+            "required": {
+               "every": ["id"]
+            }
+         }
+      ],
+      "react/prop-types": 0,
       "eqeqeq": 0,
-      "no-undef": 0
+      "no-return-assign": 0,
+      "react/no-deprecated": 0,
+      "react/no-direct-mutation-state": 0,
+      "class-methods-use-this": 0,
+      "no-useless-return": 0
    }
 }

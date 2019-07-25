@@ -1,63 +1,56 @@
 const randomString = require('./randomString');
-class Authorization {
-   constructor(Users, url) {
-      this.users = Users;
-      this.url = url;
-      this.POST = (req, res) => {
-         const login = req.body.login;
-         const password = req.body.password;
-         if (this.users.isExistUser(login, password)) {
-            this.entrance(this.users, login, req.session);
-            res.redirect('/');
-            return;
-         }
-         res.render(this.url, { error: true, headTitle: 'authorization' });
+const USERS = require('./Users');
+const authApp = require('express').Router();
+
+const isAuthorization = session => {
+   const login = session.login;
+   const token = session.token;
+   return USERS.isExistUserToken(login, token);
+};
+
+const entrance = (login, session) => {
+   const token = randomString();
+   USERS.addNewToken(token, login);
+   session.token = token;
+   session.login = login;
+};
+
+module.exports.Main = app => {
+   authApp.use('/authorization', (req, res, next) => {
+      if (isAuthorization(req.session)) {
+         res.redirect('/');
          return;
-      };
+      }
+      next();
+   });
 
-      this.GET = (req, res) => {
-         res.render(this.url, { error: false, headTitle: 'authorization' });
-      };
+   authApp.get('/authorization', (req, res) => {
+      app.render(req, res, '/authorization', {});
+   });
 
-      this.main = (req, res, next) => {
-         const isAuthorization = this.isAuthorization(req.session);
+   authApp.post('/authorization', (req, res) => {
+      const { login, password } = req.body;
+      const isExistUser = USERS.isExistUser(login, password);
+      if (isExistUser) {
+         const token = randomString();
+         USERS.addNewToken(token, login);
+         req.session.token = token;
+         req.session.login = login;
+         return app.render(req, res, '/');
+         // return res.send(JSON.stringify({}));
+      }
+      return app.render(req, res, '/authorization');
+      // return res.send(JSON.stringify({ error: 'Incorrect login or password' }));
+   });
 
-         if (req.url == `/${this.url}`) {
-            if (!isAuthorization) {
-               switch (req.method) {
-                  case 'GET': {
-                     this.GET(req, res);
-                     break;
-                  }
-                  case 'POST': {
-                     this.POST(req, res);
-                     break;
-                  }
-               }
-            } else {
-               res.redirect('/');
-            }
-            return;
-         }
-         if (!isAuthorization) {
-            res.redirect(`/${this.url}`);
-            return false;
-         }
-         next();
-         return true;
-      };
-   }
-   isAuthorization(session) {
-      const login = session.login;
-      const token = session.token;
-      return this.users.isExistUserToken(login, token);
-   }
-   entrance(users, login, session) {
-      const token = randomString();
-      users.addNewToken(token, login);
-      session.token = token;
-      session.login = login;
-   }
-}
+   // authApp.use((req, res, next) => {
+   //    console.log(req.url);
+   //    if (!isAuthorization(req.session)) {
+   //       res.redirect('/authorization');
+   //    } else next();
+   // });
 
-module.exports = Authorization;
+   return authApp;
+};
+module.exports.isAuthorization = isAuthorization;
+module.exports.entrance = entrance;
