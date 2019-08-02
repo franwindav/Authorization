@@ -35,8 +35,10 @@ const Error_ = styled.div`
 
 const GlobalStyle = createGlobalStyle`
    body {
+      margin: 0;
       min-height: 100vh;
       background: linear-gradient(-135deg, #c850c0, #4158d0);
+      overflow: hidden;
    }
 `;
 

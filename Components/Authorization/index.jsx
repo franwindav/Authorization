@@ -16,16 +16,16 @@ class Authorization extends Component {
             <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
             {this.state.error ? <Error_>{this.state.error}</Error_> : ''}
             <Authorization_>
-               <Form setError={this.setError.bind(this)} />
+               <Form
+                  setError={error => {
+                     this.setState({
+                        error
+                     });
+                  }}
+               />
             </Authorization_>
          </div>
       );
-   }
-
-   setError(error) {
-      this.setState({
-         error
-      });
    }
 }
 

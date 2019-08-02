@@ -4,6 +4,7 @@ const GlobalStyle = createGlobalStyle`
    body {
       min-height: 100vh;
       background: linear-gradient(-135deg, #c850c0, #4158d0);
+      overflow: hidden;
    }
 `;
 

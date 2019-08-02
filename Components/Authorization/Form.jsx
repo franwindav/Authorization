@@ -8,27 +8,27 @@ class Form extends Component {
          <Form_
             action="/authorization"
             method="POST"
-            // onSubmit={e => {
-            //    e.preventDefault();
-            //    const { setError } = this.props;
-            //    fetch('/authorization', {
-            //       method: 'POST',
-            //       body: JSON.stringify({
-            //          login: this.login.value,
-            //          password: this.password.value
-            //       }),
-            //       headers: { 'content-type': 'application/json' }
-            //    }).then(response => {
-            //       response.json().then(res => {
-            //          if (res.error) {
-            //             setError(res.error);
-            //          } else {
-            //             window.location.replace('/');
-            //          }
-            //       });
-            //    });
-            //    return false;
-            // }}
+            onSubmit={e => {
+               e.preventDefault();
+               const { setError } = this.props;
+               fetch('/authorization', {
+                  method: 'POST',
+                  body: JSON.stringify({
+                     login: this.login.value,
+                     password: this.password.value
+                  }),
+                  headers: { 'content-type': 'application/json' }
+               }).then(response => {
+                  response.json().then(res => {
+                     if (res.error) {
+                        setError(res.error);
+                     } else {
+                        window.location.replace(res.nextPage);
+                     }
+                  });
+               });
+               return false;
+            }}
          >
             <Title_>Authorization</Title_>
             <Data_>

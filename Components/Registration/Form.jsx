@@ -3,35 +3,33 @@ import SignControl from 'Components/SignControl';
 import { Form_, Title_, Data_, Field_, Ico_, Warn_, MainRole_, Roles_, RoleContainer_, RadioRole_, Filter_, Label_, Role_, Chosen_, DataField_ } from './FormStyles';
 
 class Form extends Component {
-   roles = ['FrontEnd developer', 'tester', 'BackEnd developer'];
-
    render() {
       const { inConfirmPassword, inPassword, inLogin, inRole } = this.props.errors;
       return (
          <Form_
             action="/registration"
             method="POST"
-            // onSubmit={e => {
-            //    e.preventDefault();
+            onSubmit={e => {
+               e.preventDefault();
 
-            //    fetch('/registration', {
-            //       method: 'POST',
-            //       body: JSON.stringify({
-            //          login: this.login.value,
-            //          password: this.password.value,
-            //          confirmPassword: this.confirmPassword.value,
-            //          role: this.role
-            //       }),
-            //       headers: { 'content-type': 'application/json' }
-            //    }).then(response => {
-            //       response.json().then(res => {
-            //          if (Object.keys(res).length === 0) window.location.replace('/successRegistration');
-            //          this.props.setErrors(res);
-            //       });
-            //    });
+               fetch('/registration', {
+                  method: 'POST',
+                  body: JSON.stringify({
+                     login: this.login.value,
+                     password: this.password.value,
+                     confirmPassword: this.confirmPassword.value,
+                     role: this.role
+                  }),
+                  headers: { 'content-type': 'application/json' }
+               }).then(response => {
+                  response.json().then(res => {
+                     if (res.errors == undefined) window.location.replace(res.nextPage);
+                     this.props.setErrors(res.errors);
+                  });
+               });
 
-            //    return false;
-            // }}
+               return false;
+            }}
          >
             <Title_>Registration</Title_>
             <Data_>
@@ -59,7 +57,7 @@ class Form extends Component {
                   <Chosen_ ref={e => (this.Chosen = e)}>not chosen</Chosen_>
                   <Ico_ className="fa fa-user ico" />
                   <Roles_ ref={e => (this.Roles = e)}>
-                     {this.roles.map((e, i) => (
+                     {this.props.roles.map((e, i) => (
                         <RoleContainer_ key={i}>
                            <Label_>
                               <RadioRole_
@@ -89,9 +87,3 @@ class Form extends Component {
 }
 
 export default Form;
-
-/* <link rel="stylesheet" type="text/css" href="/reg/styles/index.css" />
-<link rel="stylesheet" type="text/css" href="/signControl/index.css" />
-<link href="https://fonts.googleapis.com/css?family=Montserrat|Poppins&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-<script src="/reg/js/index.js"></script> */

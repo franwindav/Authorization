@@ -2,53 +2,47 @@ const randomString = require('./randomString');
 const USERS = require('./Users');
 const authApp = require('express').Router();
 
-const isAuthorization = session => {
+const isAuthorization = async session => {
    const login = session.login;
    const token = session.token;
    return USERS.isExistUserToken(login, token);
 };
 
-const entrance = (login, session) => {
+const entrance = async (login, session) => {
    const token = randomString();
-   USERS.addNewToken(token, login);
+   await USERS.addNewToken(token, login);
    session.token = token;
    session.login = login;
 };
 
 module.exports.Main = app => {
-   authApp.use('/authorization', (req, res, next) => {
-      if (isAuthorization(req.session)) {
-         res.redirect('/');
-         return;
-      }
+   authApp.use('/authorization', async (req, res, next) => {
+      if (await isAuthorization(req.session)) return res.redirect('/');
       next();
    });
 
    authApp.get('/authorization', (req, res) => {
-      app.render(req, res, '/authorization', {});
+      return app.render(req, res, '/authorization', {});
    });
 
-   authApp.post('/authorization', (req, res) => {
+   authApp.post('/authorization', async (req, res) => {
       const { login, password } = req.body;
-      const isExistUser = USERS.isExistUser(login, password);
+      const isExistUser = await USERS.isExistUser(login, password);
       if (isExistUser) {
          const token = randomString();
-         USERS.addNewToken(token, login);
+         await USERS.addNewToken(token, login);
          req.session.token = token;
          req.session.login = login;
-         return app.render(req, res, '/');
-         // return res.send(JSON.stringify({}));
+         return res.send(JSON.stringify({ nextPage: '/' }));
       }
-      return app.render(req, res, '/authorization');
-      // return res.send(JSON.stringify({ error: 'Incorrect login or password' }));
+      return res.send(JSON.stringify({ error: 'Incorrect login or password' }));
    });
 
-   // authApp.use((req, res, next) => {
-   //    console.log(req.url);
-   //    if (!isAuthorization(req.session)) {
-   //       res.redirect('/authorization');
-   //    } else next();
-   // });
+   authApp.use(async (req, res, next) => {
+      if (!req.url.includes('_next') && !(await isAuthorization(req.session))) {
+         res.redirect('/authorization');
+      } else next();
+   });
 
    return authApp;
 };

@@ -1,3 +1,4 @@
+const Database = require('./Database').Users;
 class Users {
    constructor() {
       this.users = [
@@ -15,47 +16,64 @@ class Users {
       return role < this.roles.length && role >= 0;
    }
 
-   isExistUserToken(login, token) {
-      const user = this.findUser(login);
+   async isExistUserToken(login, token) {
+      const user = await this.findUser(login);
       if (!user) return false;
       return user.tokens.includes(token);
    }
 
-   addNewToken(token, login) {
-      const user = this.findUser(login);
+   async addNewToken(token, login) {
+      const user = await this.findUser(login);
       if (user.tokens.unshift(token) > 10) {
          user.tokens.splice(10, 1);
       }
+      Database.updateUser(login, { tokens: user.tokens });
    }
 
-   findUser(login) {
-      for (let i = 0; i < this.users.length; i++) {
-         if (login === this.users[i].login) {
-            return this.users[i];
-         }
-      }
-      return false;
+   async findUser(login) {
+      return Database.getUser(login);
    }
 
-   getRole(login) {
-      const { role } = this.findUser(login);
-      return this.roles[role];
+   async getRole(login) {
+      const user = await this.findUser(login);
+      if (!user) return false;
+      return user.role;
    }
 
-   addUser(data) {
+   async addUser(data) {
       const { login, password, role } = data;
-      this.users.push({
+      const user = {
          login,
          password,
          role,
          tokens: []
-      });
+      };
+      await Database.addUser(user);
+      this.users.push(user);
    }
 
-   isExistUser(login, password) {
-      const user = this.findUser(login);
+   async isExistUser(login, password) {
+      const user = await this.findUser(login);
       if (!user) return false;
       return user.password == password;
+   }
+
+   async setQualAnswer(login, id, answer, mistakes) {
+      const user = await Database.getUser(login);
+
+      if (user.qualification == undefined) {
+         user.qualification = {};
+         user.qualification.answers = [];
+      }
+
+      const qual = user.qualification;
+
+      if (user && !qual.answers[id]) {
+         qual.answers[id] = { data: answer, mistakes };
+         Database.updateUser(login, { qualification: qual });
+         return true;
+      }
+      return false;
    }
 }
 

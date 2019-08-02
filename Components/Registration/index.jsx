@@ -9,6 +9,7 @@ class Registration extends Component {
    };
 
    render() {
+      const { roles } = this.props;
       return (
          <div>
             <GlobalStyle />
@@ -18,6 +19,7 @@ class Registration extends Component {
             <Registration_>
                <Form
                   errors={this.state.errors}
+                  roles={roles}
                   setErrors={errors => {
                      this.setState({ errors });
                   }}
