@@ -37,8 +37,8 @@ app.prepare()
       server.use(Qual(app));
 
       // logout
-      server.get('/logout', (req, res) => {
-         req.session.destroy();
+      server.get('/logout', async (req, res) => {
+         await req.session.destroy();
          res.redirect('/authorization');
       });
 

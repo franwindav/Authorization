@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
+import Main from 'Components/Main';
 
 class Index extends Component {
    render() {
-      return <h1>Main</h1>;
+      return <Main />;
    }
 }
 

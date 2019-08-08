@@ -3,7 +3,7 @@
       "browser": true,
       "es6": true
    },
-   "extends": ["eslint:recommended", "plugin:react/recommended", "plugin:prettier/recommended", "plugin:jsx-a11y/recommended", "airbnb-base/legacy"],
+   "extends": ["eslint:recommended", "plugin:react/recommended", "plugin:jsx-a11y/recommended", "plugin:prettier/recommended"],
    "globals": {
       "Atomics": "readonly",
       "SharedArrayBuffer": "readonly"
@@ -13,61 +13,13 @@
       "ecmaFeatures": {
          "jsx": true
       },
-      "ecmaVersion": 2018,
       "sourceType": "module",
       "allowImportExportEverywhere": false,
       "codeFrame": true
    },
    "plugins": ["react", "prettier", "jsx-a11y"],
    "rules": {
-      "object-curly-newline": 0,
-      "no-mixed-operators": 0,
-      "arrow-body-style": 0,
-      "function-paren-newline": 0,
-      "no-plusplus": 0,
-      "space-before-function-paren": 0,
-      "strict": 0,
-      "linebreak-style": ["error", "windows"],
-      "import/no-unresolved": 0,
-      "indent": ["error", 3],
-      "arrow-parens": 0,
-      "no-nested-ternary": 0,
-      "prettier/prettier": 0,
-      "max-len": [
-         "error",
-         200,
-         2,
-         {
-            "ignoreUrls": true
-         }
-      ],
-      "no-confusing-arrow": 0,
-      "implicit-arrow-linebreak": 0,
-      "no-param-reassign": 0,
-      "radix": 0,
-      "react/require-default-props": 0,
-      "react/forbid-prop-types": 0,
-      "prefer-destructuring": 0,
-      "no-underscore-dangle": 0,
-      "react/no-find-dom-node": 0,
-      "react/no-did-mount-set-state": 0,
-      "react/no-unused-prop-types": 0,
-      "react/jsx-one-expression-per-line": 0,
-      "jsx-a11y/anchor-is-valid": [
-         "error",
-         {
-            "components": ["Link"],
-            "specialLink": ["to"]
-         }
-      ],
       "react/prop-types": 0,
-      "eqeqeq": 0,
-      "no-return-assign": 0,
-      "react/no-deprecated": 0,
-      "react/no-direct-mutation-state": 0,
-      "class-methods-use-this": 0,
-      "no-useless-return": 0,
-      "consistent-return": 0,
-      "jsx-a11y/label-has-for": 0
+      "no-undef": 0
    }
 }

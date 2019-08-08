@@ -7,8 +7,7 @@ class Qualification extends Component {
    }
 
    render() {
-      const { question, nextQuestion, solved } = this.props;
-      return <Qua question={question} nextQuestion={nextQuestion} solved={solved} />;
+      return <Qua {...this.props} />;
    }
 }
 

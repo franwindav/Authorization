@@ -24,6 +24,8 @@ class Users {
 
    async addNewToken(token, login) {
       const user = await this.findUser(login);
+      if (!user) return false;
+      if (!user.tokens) user.tokens = [];
       if (user.tokens.unshift(token) > 10) {
          user.tokens.splice(10, 1);
       }
@@ -68,12 +70,34 @@ class Users {
 
       const qual = user.qualification;
 
-      if (user && !qual.answers[id]) {
-         qual.answers[id] = { data: answer, mistakes };
+      if (user && (!qual.answers[id] || (qual.answers[id] && !qual.answers[id].checked))) {
+         qual.answers[id] = { data: answer, mistakes, checked: true, mark: mistakes.some(e => e) ? 'error' : 'success' };
          Database.updateUser(login, { qualification: qual });
          return true;
       }
       return false;
+   }
+
+   async saveQualAnswer(login, id, answer) {
+      const user = await Database.getUser(login);
+
+      if (user.qualification == undefined) {
+         user.qualification = {};
+         user.qualification.answers = [];
+      }
+
+      const qual = user.qualification;
+
+      if (user && (!qual.answers[id] || (qual.answers[id] && !qual.answers[id].checked))) {
+         qual.answers[id] = { data: answer, mark: 'saved' };
+         Database.updateUser(login, { qualification: qual });
+         return true;
+      }
+      return false;
+   }
+
+   async deleteQualAnswer(login) {
+      Database.updateUser(login, { qualification: undefined });
    }
 }
 
