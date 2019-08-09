@@ -72,7 +72,7 @@ class Users {
 
       if (user && (!qual.answers[id] || (qual.answers[id] && !qual.answers[id].checked))) {
          qual.answers[id] = { data: answer, mistakes, checked: true, mark: mistakes.some(e => e) ? 'error' : 'success' };
-         Database.updateUser(login, { qualification: qual });
+         await Database.updateUser(login, { qualification: qual });
          return true;
       }
       return false;
@@ -90,7 +90,7 @@ class Users {
 
       if (user && (!qual.answers[id] || (qual.answers[id] && !qual.answers[id].checked))) {
          qual.answers[id] = { data: answer, mark: 'saved' };
-         Database.updateUser(login, { qualification: qual });
+         await Database.updateUser(login, { qualification: qual });
          return true;
       }
       return false;

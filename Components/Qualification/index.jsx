@@ -24,15 +24,16 @@ import {
 
 class Qualification extends Component {
    state = {
-      solved: this.props.solved
+      solved: this.props.solved,
+      questionsList: this.props.questionsList
    };
 
    answer = [];
 
    render() {
       const { name, code } = this.props.question;
-      const { nextQuestion, questionsList, backQuestion, id } = this.props;
-      const { solved } = this.state;
+      const { nextQuestion, backQuestion, id } = this.props;
+      const { solved, questionsList } = this.state;
       return (
          <Qualification_>
             <GlobalStyle_ />
@@ -78,7 +79,7 @@ class Qualification extends Component {
                   }).then(response => {
                      response.json().then(res => {
                         if (res.solved) {
-                           this.setState({ solved: res.solved });
+                           this.setState({ solved: res.solved, questionsList: res.questionsList });
                         }
                      });
                   });

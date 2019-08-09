@@ -126,8 +126,20 @@ module.exports = app => {
       let result = await findMistakes(req.session.login, req.params.id, userAnswer);
       let next = await USERS.setQualAnswer(req.session.login, req.params.id, userAnswer, result.mistakes);
 
+      const user = await USERS.findUser(req.session.login);
+      const role = user.role;
+      const allQuestion = await DatabaseQual.getAllQuestion(role);
+
       if (next) {
-         return res.send(JSON.stringify({ solved: { mistakes: result.mistakes.some(e => e) ? result.mistakes : undefined, answer: result.answer ? result.answer : userAnswer } }));
+         return res.send(
+            JSON.stringify({
+               solved: {
+                  mistakes: result.mistakes.some(e => e) ? result.mistakes : undefined,
+                  answer: result.answer ? result.answer : userAnswer
+               },
+               questionsList: getQuestionsList(allQuestion, user.qualification)
+            })
+         );
       }
 
       return res.send(JSON.stringify({}));
